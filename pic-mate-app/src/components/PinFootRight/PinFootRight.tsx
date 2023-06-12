@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export interface PinFootRightProp {
     x: number,
@@ -6,12 +6,17 @@ export interface PinFootRightProp {
     pinNo: number
 }
 export const PinFootRight = (props: PinFootRightProp) => {
+    const footRef = useRef<SVGRectElement>(null);
     const [select, setSelect] = useState<boolean>(false);
-
+    const [textMarginLeft, setTextMarginLeft] = useState<number>(0);
     const fillColor: 'gray' | 'white' = select ? 'gray' : 'white';
 
-    const textMarginLeft: number = 25;
     const textMarginTop: number = 15;
+
+    useEffect(() => {
+        if (!footRef.current) { return; }
+        setTextMarginLeft(footRef.current.getBBox().width * 1.2);
+    }, [footRef.current, setTextMarginLeft, props]);
 
     const onClickFoot = useCallback(() => {
         setSelect((prev) => !prev);
@@ -19,8 +24,8 @@ export const PinFootRight = (props: PinFootRightProp) => {
 
     return (
         <>
-            <rect x={props.x} y={props.y} width='5vw' height='2.5vh' fill={fillColor} stroke='black' onClick={onClickFoot} />
-            <text x={props.x - textMarginLeft} y={props.y + textMarginTop} onClick={onClickFoot}>{props.pinNo}</text>
+            <rect ref={footRef} x={props.x} y={props.y} width='5vw' height='2.5vh' fill={fillColor} stroke='white' onClick={onClickFoot} />
+            <text x={props.x - textMarginLeft} y={props.y + textMarginTop} onClick={onClickFoot} fill="white">{props.pinNo}</text>
         </>
     )
 }

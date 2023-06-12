@@ -1,11 +1,20 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import './Home.css';
-import { PinFootLeft } from '../components/PinFootLeft/PinFootLeft';
-import { PinFootRight } from '../components/PinFootRight/PinFootRight';
 import { Device } from '../components/Device/Device';
+import { useEffect, useRef, useState } from 'react';
 
 const Home: React.FC = () => {
 
+  const rootRef = useRef<SVGSVGElement>(null);
+  const [rootWidth, setRootWidth] = useState<number>(0);
+  const [rootHeight, setRootHeight] = useState<number>(0);
+
+  useEffect(() => {
+    if (!rootRef.current) { return; }
+    const rect = rootRef.current.getBBox();
+    setRootWidth(rect.width * 0.7);
+    setRootHeight(rect.height * 0.05);
+  }, [rootRef.current, setRootWidth, setRootHeight]);
 
   return (
     <IonPage>
@@ -15,13 +24,8 @@ const Home: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
-        <svg style={{ width: '100vw', height: '50vh' }} >
-
-          <Device x={10} y={10} pinLength={20} />
-
-
-
-
+        <svg ref={rootRef} style={{ width: '100vw', height: '50vh' }} >
+          <Device x={rootWidth} y={rootHeight} pinLength={20} />
         </svg>
       </IonContent>
     </IonPage>
