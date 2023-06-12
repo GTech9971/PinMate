@@ -1,0 +1,7 @@
+{
+  "name": "pic-mate-app",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}
