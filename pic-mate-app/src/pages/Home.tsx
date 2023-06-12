@@ -1,6 +1,7 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import './Home.css';
 import { PinFootLeft } from '../components/PinFootLeft/PinFootLeft';
+import { PinFootRight } from '../components/PinFootRight/PinFootRight';
 
 const Home: React.FC = () => {
 
@@ -17,6 +18,7 @@ const Home: React.FC = () => {
           <circle cx='25' cy='25' r='10' />
 
           <PinFootLeft x={10} y={40} pinNo={0} />
+          <PinFootRight x={140} y={40} pinNo={10} />
 
           <rect x='10' y='10' width='40vw' height='45vh' rx={10} fill='none' stroke='black' />
         </svg>
