@@ -21,6 +21,7 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
+import { RegistryDevice } from './pages/RegistryDevice/RegistryDevice';
 
 setupIonicReact();
 
@@ -32,7 +33,11 @@ const App: React.FC = () => (
           <Home />
         </Route>
         <Route exact path="/">
-          <Redirect to="/home" />
+          <Redirect to="/registry" />
+        </Route>
+
+        <Route exact path='/registry'>
+          <RegistryDevice />
         </Route>
       </IonRouterOutlet>
     </IonReactRouter>

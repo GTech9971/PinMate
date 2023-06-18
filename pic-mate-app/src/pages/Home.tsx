@@ -1,7 +1,10 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { IonAccordion, IonAccordionGroup, IonContent, IonHeader, IonItem, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import './Home.css';
 import { Device } from '../components/Device/Device';
 import { useEffect, useRef, useState } from 'react';
+import { BinaryCard } from '../components/Registers/BinaryCard/BinaryCard';
+import { HexCard } from '../components/Registers/HexCard/HexCard';
+import { DecCard } from '../components/Registers/DecCard/DecCard';
 
 const Home: React.FC = () => {
 
@@ -20,13 +23,44 @@ const Home: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Blank</IonTitle>
+          <IonTitle>PIC16F1827</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent fullscreen>
-        <svg ref={rootRef} style={{ width: '100vw', height: '50vh' }} >
-          <Device x={rootWidth} y={rootHeight} pinLength={20} />
+
+      <IonHeader slot='fixed'>
+        <svg ref={rootRef} style={{ width: '100vw', height: '50vh', background: 'gray' }} >
+          <Device x={rootWidth} y={rootHeight} pinLength={18} />
         </svg>
+      </IonHeader>
+
+      <IonContent fullscreen>
+        <IonAccordionGroup multiple>
+
+          <IonAccordion value='ra'>
+            <IonItem slot='header' color='light'>
+              <h2 className='ion-text'>RA</h2>
+            </IonItem>
+
+            <div className='ion-padding' slot='content' >
+              <BinaryCard />
+              <HexCard />
+              <DecCard />
+            </div>
+          </IonAccordion>
+
+          <IonAccordion value='rb'>
+            <IonItem slot='header' color='light'>
+              <h2 className='ion-text'>RB</h2>
+            </IonItem>
+
+            <div className='ion-padding' slot='content' >
+              <BinaryCard />
+              <HexCard />
+              <DecCard />
+            </div>
+          </IonAccordion>
+        </IonAccordionGroup>
+
       </IonContent>
     </IonPage>
   );

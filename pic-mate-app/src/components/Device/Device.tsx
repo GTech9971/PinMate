@@ -9,8 +9,8 @@ export interface DevicePorp {
     pinLength: number,
 }
 export const Device = (props: DevicePorp) => {
-    const pinFootLeftArray: number[] = Array.from({ length: props.pinLength / 2 + 1 }, (_, i) => i);
-    const pinFootRightArray: number[] = Array.from({ length: props.pinLength / 2 + 1 }, (_, i) => i + (props.pinLength / 2));
+    const pinFootLeftArray: number[] = Array.from({ length: props.pinLength / 2 }, (_, i) => i + 1);
+    const pinFootRightArray: number[] = Array.from({ length: props.pinLength / 2 }, (_, i) => i + (props.pinLength / 2) + 1).reverse();
 
 
     const deviceRef = useRef<SVGRectElement>(null);
