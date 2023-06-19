@@ -1,9 +1,11 @@
+import { Pin } from "../Devices/Pin"
+
 export type AssignPinNoArrayAction = |
 {
     type: 'assign',
-    pinNo: number
+    pin: Pin
 } |
 {
     type: 'unassign',
-    pinNo: number
+    pin: Pin
 }

@@ -4,34 +4,14 @@ export class PinArray {
 
     private readonly PIN_LENGTH: number = 8;
 
-    public get Array(): Pin[] { return this.array; }
+    private readonly value: Pin[];
+    public get Value(): Pin[] { return this.value; }
 
     constructor(private readonly array: Pin[]) {
         // if (array.length !== this.PIN_LENGTH) {
         //     throw new Error('');
         // }
+        const uniqueSortedArray: Pin[] = Array.from(new Set(this.array)).sort();
+        this.value = uniqueSortedArray;
     }
-
-    public EnablePin(pinNo: number): PinArray {
-        const enablePins: Pin[] = this.array.map((pin) => {
-            if (pin.No === pinNo) {
-                return pin.Enable();
-            }
-            return pin;
-        });
-        return new PinArray(enablePins);
-    }
-
-    public DisablePin(pinNo: number): PinArray {
-        const disablePins: Pin[] = this.array.map((pin) => {
-            if (pin.No === pinNo) {
-                return pin.Disable();
-            }
-            return pin;
-        });
-
-        return new PinArray(disablePins);
-    }
-
-
 }

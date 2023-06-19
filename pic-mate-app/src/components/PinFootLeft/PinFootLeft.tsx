@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AssignPinNoArrayAction } from "../../models/Assigns/AssignPinNoArray.action";
+import { Pin } from "../../models/Devices/Pin";
 
 export interface PinFootLeftProp {
     x: number,
     y: number,
-    pinNo: number,
+    pin: Pin,
     dispatchAssignPinArray: React.Dispatch<AssignPinNoArrayAction>,
 }
 export const PinFootLeft = (props: PinFootLeftProp) => {
@@ -31,15 +32,15 @@ export const PinFootLeft = (props: PinFootLeftProp) => {
     const onClickFoot = useCallback(() => {
         setSelect((prev) => {
             const next: boolean = !prev;
-            props.dispatchAssignPinArray({ type: next ? "assign" : 'unassign', pinNo: props.pinNo });
+            props.dispatchAssignPinArray({ type: next ? "assign" : 'unassign', pin: props.pin });
             return next;
         });
-    }, [setSelect, props.dispatchAssignPinArray, props.pinNo]);
+    }, [setSelect, props.dispatchAssignPinArray, props.pin]);
 
     return (
         <>
             <rect ref={footRef} x={props.x} y={props.y} width='5vw' height='2.5vh' fill={fillColor} stroke='white' onClick={onClickFoot} />
-            <text x={props.x + textMarginLeft} y={props.y + textMarginTop} onClick={onClickFoot} fill='white'>{props.pinNo}</text>
+            <text x={props.x + textMarginLeft} y={props.y + textMarginTop} onClick={onClickFoot} fill='white'>{props.pin.No}</text>
 
             {/* <defs>
                 <marker

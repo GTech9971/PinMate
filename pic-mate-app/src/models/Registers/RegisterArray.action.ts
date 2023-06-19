@@ -7,4 +7,8 @@ export type RegisterArrayAction = |
 {
     type: 'unregister',
     register: Register
+} |
+{
+    type: 'updat-register',
+    register: Register,
 }

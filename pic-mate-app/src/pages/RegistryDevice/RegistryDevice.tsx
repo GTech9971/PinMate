@@ -3,7 +3,6 @@ import { useCallback, useEffect, useReducer, useRef, useState } from "react"
 import { DeviceData } from "../../models/Devices/DeviceData"
 import { Device } from "../../components/Device/Device";
 import { addCircleOutline } from 'ionicons/icons'
-import { AssignPinNoArray } from "../../models/Assigns/AssignPinNoArray";
 import { AssignPinNoArrayReducer } from "../../models/Assigns/AssignPinNoArray.reducer";
 import { RegisterArrayReducer } from "../../models/Registers/RegisterArray.reducer";
 import { RegisterArray } from "../../models/Registers/RegisterArray";
@@ -11,6 +10,8 @@ import { Register } from "../../models/Registers/Register";
 import { RegisterName } from "../../models/Registers/RegisterName";
 import { PinArray } from "../../models/Devices/PinArray";
 import { RegisterItem } from "../../components/Registers/RegisterItem/RegisterItem";
+import { Pin } from "../../models/Devices/Pin";
+import { RegisterPinArray } from "../../models/Registers/RegisterPinArray";
 
 export const RegistryDevice = () => {
 
@@ -20,11 +21,11 @@ export const RegistryDevice = () => {
 
     const [pinLength, setPinLength] = useState<number>(8);
 
-    const [assignLeftPinArray, dispatchAssignLeftPinArray] = useReducer(AssignPinNoArrayReducer, new AssignPinNoArray([]));
-    const [assignRightPinArray, dispatchAssignRightPinArray] = useReducer(AssignPinNoArrayReducer, new AssignPinNoArray([]));
+    const [assignLeftPinArray, dispatchAssignLeftPinArray] = useReducer(AssignPinNoArrayReducer, new PinArray([]));
+    const [assignRightPinArray, dispatchAssignRightPinArray] = useReducer(AssignPinNoArrayReducer, new PinArray([]));
 
 
-    const [registerArray, dispatchRegisterArray] = useReducer(RegisterArrayReducer, new RegisterArray([new Register(new RegisterName('RA'), new PinArray([]))]));
+    const [registerArray, dispatchRegisterArray] = useReducer(RegisterArrayReducer, new RegisterArray([new Register(new RegisterName('RA'), new RegisterPinArray([]))]));
     const [selectRegister, setSelectRegister] = useState<Register>(registerArray.Value[0]);
 
     useEffect(() => {
@@ -56,7 +57,21 @@ export const RegistryDevice = () => {
 
     useEffect(() => {
         console.log(assignLeftPinArray.Value);
-    }, [assignLeftPinArray]);
+        if (selectRegister) {
+            //TODO
+            //pinNoからレジスターピンを作る
+
+            let registerNo: number;
+            if (selectRegister.RegisterPinArray.Value.length === 0) {
+                registerNo = 0;
+            } else {
+                registerNo = selectRegister.RegisterPinArray.Value[selectRegister.RegisterPinArray.Value.length - 1].RegisterNo + 1;
+            }
+
+            // const assignRegister: Register = new Register(selectRegister.Name, new RegisterArray(pins));
+            // dispatchRegisterArray({ type: 'updat-register', register: assignRegister });
+        }
+    }, [assignLeftPinArray, dispatchRegisterArray]);
 
     useEffect(() => {
         console.log(assignRightPinArray.Value);
