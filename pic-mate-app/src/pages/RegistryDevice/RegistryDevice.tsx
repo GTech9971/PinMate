@@ -1,4 +1,4 @@
-import { IonButton, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonLabel, IonList, IonListHeader, IonPage, IonSelect, IonSelectOption, IonTitle, IonToolbar } from "@ionic/react"
+import { IonButton, IonContent, IonHeader, IonIcon, IonInput, IonLabel, IonList, IonListHeader, IonPage, IonSelect, IonSelectOption, IonTitle, IonToolbar } from "@ionic/react"
 import { useCallback, useEffect, useReducer, useRef, useState } from "react"
 import { DeviceData } from "../../models/Devices/DeviceData"
 import { Device } from "../../components/Device/Device";
@@ -8,6 +8,9 @@ import { AssignPinNoArrayReducer } from "../../models/Assigns/AssignPinNoArray.r
 import { RegisterArrayReducer } from "../../models/Registers/RegisterArray.reducer";
 import { RegisterArray } from "../../models/Registers/RegisterArray";
 import { Register } from "../../models/Registers/Register";
+import { RegisterName } from "../../models/Registers/RegisterName";
+import { PinArray } from "../../models/Devices/PinArray";
+import { RegisterItem } from "../../components/Registers/RegisterItem/RegisterItem";
 
 export const RegistryDevice = () => {
 
@@ -21,7 +24,8 @@ export const RegistryDevice = () => {
     const [assignRightPinArray, dispatchAssignRightPinArray] = useReducer(AssignPinNoArrayReducer, new AssignPinNoArray([]));
 
 
-    const [registerArray, dispatchRegisterArray] = useReducer(RegisterArrayReducer, new RegisterArray([]));
+    const [registerArray, dispatchRegisterArray] = useReducer(RegisterArrayReducer, new RegisterArray([new Register(new RegisterName('RA'), new PinArray([]))]));
+    const [selectRegister, setSelectRegister] = useState<Register>(registerArray.Value[0]);
 
     useEffect(() => {
         if (!rootRef.current) { return; }
@@ -117,20 +121,11 @@ export const RegistryDevice = () => {
                 {
                     registerArray.Value.map((register) => {
                         return (
-                            <IonItemSliding key={register.Name.Value}>
-                                <IonItem button detail={false}>
-                                    <IonListHeader>
-                                        <IonLabel>{register.Name.Value}</IonLabel>
-                                    </IonListHeader>
-                                </IonItem>
-
-                                <IonItemOptions>
-                                    <IonItemOption color='danger'
-                                        onClick={() => onClickDeleteRegisterBtn(register)}>
-                                        Delete
-                                    </IonItemOption>
-                                </IonItemOptions>
-                            </IonItemSliding>
+                            <RegisterItem key={register.Name.Value}
+                                select={selectRegister === register}
+                                register={register}
+                                onClick={() => setSelectRegister(register)}
+                                onClickDeleteRegisterBtn={onClickDeleteRegisterBtn} />
                         )
                     })
                 }
