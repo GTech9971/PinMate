@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { AssignPinNoArrayAction } from "../../models/Assigns/AssignPinNoArray.action";
 
 export interface PinFootRightProp {
     x: number,
     y: number,
-    pinNo: number
+    pinNo: number,
+    dispatchAssignPinArray: React.Dispatch<AssignPinNoArrayAction>,
 }
 export const PinFootRight = (props: PinFootRightProp) => {
     const footRef = useRef<SVGRectElement>(null);
@@ -19,8 +21,12 @@ export const PinFootRight = (props: PinFootRightProp) => {
     }, [footRef.current, setTextMarginLeft, props]);
 
     const onClickFoot = useCallback(() => {
-        setSelect((prev) => !prev);
-    }, [setSelect]);
+        setSelect((prev) => {
+            const next: boolean = !prev;
+            props.dispatchAssignPinArray({ type: next ? "assign" : 'unassign', pinNo: props.pinNo });
+            return next;
+        });
+    }, [setSelect, props.dispatchAssignPinArray, props.pinNo]);
 
     return (
         <>

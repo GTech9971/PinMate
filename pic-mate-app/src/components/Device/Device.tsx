@@ -2,23 +2,24 @@ import { useEffect, useRef, useState } from "react";
 import { PinFootLeft } from "../PinFootLeft/PinFootLeft"
 import { PinFootRight } from "../PinFootRight/PinFootRight"
 import { DeviceHeader } from "../DeviceHeader/DeviceHeader";
+import { AssignPinNoArrayAction } from "../../models/Assigns/AssignPinNoArray.action";
 
 export interface DevicePorp {
     x: number,
     y: number,
     pinLength: number,
+    dispatchAssignLeftPinArray: React.Dispatch<AssignPinNoArrayAction>,
+    dispatchAssignRightPinArray: React.Dispatch<AssignPinNoArrayAction>,
 }
 export const Device = (props: DevicePorp) => {
     const pinFootLeftArray: number[] = Array.from({ length: props.pinLength / 2 }, (_, i) => i + 1);
     const pinFootRightArray: number[] = Array.from({ length: props.pinLength / 2 }, (_, i) => i + (props.pinLength / 2) + 1).reverse();
-
 
     const deviceRef = useRef<SVGRectElement>(null);
 
     const [pinFootTopMargin, setPinFootTopMargin] = useState<number>(0);
     const [headerMargin, setHeaderMargin] = useState<number>(0);
     const [pinFootRightMargin, setPinFootRightMargin] = useState<number>(0);
-
 
 
     useEffect(() => {
@@ -40,7 +41,12 @@ export const Device = (props: DevicePorp) => {
             {
                 pinFootLeftArray.map((no, index) => {
                     return (
-                        <PinFootLeft key={index} x={props.x} y={props.y + headerMargin + (pinFootTopMargin * index)} pinNo={no} />
+                        <PinFootLeft
+                            key={index}
+                            x={props.x}
+                            y={props.y + headerMargin + (pinFootTopMargin * index)}
+                            pinNo={no}
+                            dispatchAssignPinArray={props.dispatchAssignLeftPinArray} />
                     )
                 })
             }
@@ -48,7 +54,12 @@ export const Device = (props: DevicePorp) => {
             {
                 pinFootRightArray.map((no, index) => {
                     return (
-                        <PinFootRight key={index} x={pinFootRightMargin + props.x} y={props.y + headerMargin + (pinFootTopMargin * index)} pinNo={no} />
+                        <PinFootRight
+                            key={index}
+                            x={pinFootRightMargin + props.x}
+                            y={props.y + headerMargin + (pinFootTopMargin * index)}
+                            pinNo={no}
+                            dispatchAssignPinArray={props.dispatchAssignRightPinArray} />
                     )
                 })
             }
