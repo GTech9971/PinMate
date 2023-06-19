@@ -1,4 +1,4 @@
-import { PinArray } from "./Devices/PinArray";
+import { PinArray } from "../Devices/PinArray";
 import { RegisterName } from "./RegisterName";
 
 export class Register {

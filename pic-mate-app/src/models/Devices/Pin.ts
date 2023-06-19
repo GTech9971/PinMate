@@ -1,4 +1,5 @@
-import { RegisterName } from "../RegisterName";
+import { RegisterName } from "../Registers/RegisterName";
+
 
 export class Pin {
 

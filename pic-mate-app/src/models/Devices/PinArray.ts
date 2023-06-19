@@ -7,9 +7,9 @@ export class PinArray {
     public get Array(): Pin[] { return this.array; }
 
     constructor(private readonly array: Pin[]) {
-        if (array.length !== this.PIN_LENGTH) {
-            throw new Error('');
-        }
+        // if (array.length !== this.PIN_LENGTH) {
+        //     throw new Error('');
+        // }
     }
 
     public EnablePin(pinNo: number): PinArray {

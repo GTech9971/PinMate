@@ -1,10 +1,13 @@
-import { IonContent, IonHeader, IonInput, IonItem, IonLabel, IonList, IonListHeader, IonPage, IonSelect, IonSelectOption, IonTitle, IonToolbar } from "@ionic/react"
+import { IonButton, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonLabel, IonList, IonListHeader, IonPage, IonSelect, IonSelectOption, IonTitle, IonToolbar } from "@ionic/react"
 import { useCallback, useEffect, useReducer, useRef, useState } from "react"
 import { DeviceData } from "../../models/Devices/DeviceData"
 import { Device } from "../../components/Device/Device";
-import { pulseOutline } from 'ionicons/icons'
+import { addCircleOutline } from 'ionicons/icons'
 import { AssignPinNoArray } from "../../models/Assigns/AssignPinNoArray";
 import { AssignPinNoArrayReducer } from "../../models/Assigns/AssignPinNoArray.reducer";
+import { RegisterArrayReducer } from "../../models/Registers/RegisterArray.reducer";
+import { RegisterArray } from "../../models/Registers/RegisterArray";
+import { Register } from "../../models/Registers/Register";
 
 export const RegistryDevice = () => {
 
@@ -17,6 +20,8 @@ export const RegistryDevice = () => {
     const [assignLeftPinArray, dispatchAssignLeftPinArray] = useReducer(AssignPinNoArrayReducer, new AssignPinNoArray([]));
     const [assignRightPinArray, dispatchAssignRightPinArray] = useReducer(AssignPinNoArrayReducer, new AssignPinNoArray([]));
 
+
+    const [registerArray, dispatchRegisterArray] = useReducer(RegisterArrayReducer, new RegisterArray([]));
 
     useEffect(() => {
         if (!rootRef.current) { return; }
@@ -34,8 +39,16 @@ export const RegistryDevice = () => {
     }, [setDevice,]);
 
     const onClickAddRegisterBtn = useCallback(() => {
+        dispatchRegisterArray({ type: 'registry' });
+    }, [dispatchRegisterArray]);
 
-    }, []);
+    const onClickDeleteRegisterBtn = useCallback((register: Register) => {
+        dispatchRegisterArray({ type: 'unregister', register: register });
+    }, [dispatchRegisterArray]);
+
+    useEffect(() => {
+        console.log(registerArray.Value);
+    }, [registerArray]);
 
     useEffect(() => {
         console.log(assignLeftPinArray.Value);
@@ -94,25 +107,35 @@ export const RegistryDevice = () => {
 
                 <IonListHeader>
                     <IonLabel>Register Infomartion</IonLabel>
+                    <IonButton onClick={onClickAddRegisterBtn} >
+                        <IonIcon icon={addCircleOutline}
+                            size="large"
+                            color='primary' />
+                    </IonButton>
                 </IonListHeader>
 
-                <IonList>
-                    <IonItem button
-                        detailIcon={pulseOutline}
-                        onClick={onClickAddRegisterBtn}>
-                        <IonLabel>Add Register</IonLabel>
-                    </IonItem>
+                {
+                    registerArray.Value.map((register) => {
+                        return (
+                            <IonItemSliding key={register.Name.Value}>
+                                <IonItem button detail={false}>
+                                    <IonListHeader>
+                                        <IonLabel>{register.Name.Value}</IonLabel>
+                                    </IonListHeader>
+                                </IonItem>
+
+                                <IonItemOptions>
+                                    <IonItemOption color='danger'
+                                        onClick={() => onClickDeleteRegisterBtn(register)}>
+                                        Delete
+                                    </IonItemOption>
+                                </IonItemOptions>
+                            </IonItemSliding>
+                        )
+                    })
+                }
 
 
-                </IonList>
-
-                <IonListHeader>
-                    <IonLabel
-                        color='primary'>RA</IonLabel>
-                </IonListHeader>
-                <IonList>
-
-                </IonList>
 
             </IonContent>
         </IonPage>
