@@ -1,28 +1,35 @@
-import { useEffect, useRef, useState } from "react";
-import { PinFootLeft } from "../PinFootLeft/PinFootLeft"
-import { PinFootRight } from "../PinFootRight/PinFootRight"
+import { useCallback, useEffect, useRef, useState } from "react";
 import { DeviceHeader } from "../DeviceHeader/DeviceHeader";
-import { AssignPinNoArrayAction } from "../../models/Assigns/AssignPinNoArray.action";
 import { PinArray } from "../../models/Devices/PinArray";
 import { Pin } from "../../models/Devices/Pin";
+import { PinFoot } from "../PinFoots/PinFoot";
+import { AssignRegisterPinArrayAction } from "../../models/Assigns/AssignRegisterPinArray.action";
 
 export interface DevicePorp {
     x: number,
     y: number,
     pinLength: number,
-    dispatchAssignLeftPinArray: React.Dispatch<AssignPinNoArrayAction>,
-    dispatchAssignRightPinArray: React.Dispatch<AssignPinNoArrayAction>,
+    dispatchAssignRegisterPinArray: React.Dispatch<AssignRegisterPinArrayAction>
 }
 export const Device = (props: DevicePorp) => {
-    const pinFootLeftArray: PinArray = new PinArray(Array.from({ length: props.pinLength / 2 }, (_, i) => new Pin(i + 1)));
-    const pinFootRightArray: PinArray = new PinArray(Array.from({ length: props.pinLength / 2 }, (_, i) => new Pin(i + (props.pinLength / 2) + 1)).reverse());
+    const pinFootLeftArray: PinArray = new PinArray(
+        Array.from({ length: props.pinLength / 2 }, (_, i) => new Pin(i + 1)).concat(
+            Array.from({ length: props.pinLength / 2 }, (_, i) => new Pin(i + (props.pinLength / 2) + 1)).reverse()
+        ));
 
     const deviceRef = useRef<SVGRectElement>(null);
-
     const [pinFootTopMargin, setPinFootTopMargin] = useState<number>(0);
     const [headerMargin, setHeaderMargin] = useState<number>(0);
     const [pinFootRightMargin, setPinFootRightMargin] = useState<number>(0);
 
+    const pinFootX = useCallback((isLeft: boolean): number => {
+        return isLeft ? props.x : pinFootRightMargin + props.x;
+    }, [props.x, pinFootRightMargin]);
+
+    const pinFootY = useCallback((isLeft: boolean, index: number): number => {
+        const useIndex: number = isLeft ? index : (props.pinLength - index - 1);
+        return props.y + headerMargin + (pinFootTopMargin * useIndex);
+    }, [props.pinLength, props.y, headerMargin, pinFootTopMargin]);
 
     useEffect(() => {
         if (!deviceRef.current) { return; }
@@ -42,30 +49,18 @@ export const Device = (props: DevicePorp) => {
 
             {
                 pinFootLeftArray.Value.map((pin, index) => {
+                    const isLeft: boolean = index < (props.pinLength / 2);
                     return (
-                        <PinFootLeft
+                        <PinFoot
                             key={index}
-                            x={props.x}
-                            y={props.y + headerMargin + (pinFootTopMargin * index)}
+                            x={pinFootX(isLeft)}
+                            y={pinFootY(isLeft, index)}
                             pin={pin}
-                            dispatchAssignPinArray={props.dispatchAssignLeftPinArray} />
+                            isLeft={isLeft}
+                            dispatchAssignRegisterPinArray={props.dispatchAssignRegisterPinArray} />
                     )
                 })
             }
-
-            {
-                pinFootRightArray.Value.map((pin, index) => {
-                    return (
-                        <PinFootRight
-                            key={index}
-                            x={pinFootRightMargin + props.x}
-                            y={props.y + headerMargin + (pinFootTopMargin * index)}
-                            pin={pin}
-                            dispatchAssignPinArray={props.dispatchAssignRightPinArray} />
-                    )
-                })
-            }
-
         </g>
     )
 }

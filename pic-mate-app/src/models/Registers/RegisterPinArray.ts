@@ -1,5 +1,8 @@
 import { RegisterPin } from "./RegisterPin";
 
+/**
+ * レジスターピンリスト
+ */
 export class RegisterPinArray {
 
     private readonly value: RegisterPin[];

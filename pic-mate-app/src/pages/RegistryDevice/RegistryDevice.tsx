@@ -3,15 +3,13 @@ import { useCallback, useEffect, useReducer, useRef, useState } from "react"
 import { DeviceData } from "../../models/Devices/DeviceData"
 import { Device } from "../../components/Device/Device";
 import { addCircleOutline } from 'ionicons/icons'
-import { AssignPinNoArrayReducer } from "../../models/Assigns/AssignPinNoArray.reducer";
 import { RegisterArrayReducer } from "../../models/Registers/RegisterArray.reducer";
 import { RegisterArray } from "../../models/Registers/RegisterArray";
 import { Register } from "../../models/Registers/Register";
 import { RegisterName } from "../../models/Registers/RegisterName";
-import { PinArray } from "../../models/Devices/PinArray";
 import { RegisterItem } from "../../components/Registers/RegisterItem/RegisterItem";
-import { Pin } from "../../models/Devices/Pin";
 import { RegisterPinArray } from "../../models/Registers/RegisterPinArray";
+import { AssignRegisterPinArrayReducer } from "../../models/Assigns/AssignRegisterPinArray.resucer";
 
 export const RegistryDevice = () => {
 
@@ -21,8 +19,7 @@ export const RegistryDevice = () => {
 
     const [pinLength, setPinLength] = useState<number>(8);
 
-    const [assignLeftPinArray, dispatchAssignLeftPinArray] = useReducer(AssignPinNoArrayReducer, new PinArray([]));
-    const [assignRightPinArray, dispatchAssignRightPinArray] = useReducer(AssignPinNoArrayReducer, new PinArray([]));
+    const [assignRegisterPinArray, dispatchAssignRegisterPinArray] = useReducer(AssignRegisterPinArrayReducer, new RegisterPinArray([]));
 
 
     const [registerArray, dispatchRegisterArray] = useReducer(RegisterArrayReducer, new RegisterArray([new Register(new RegisterName('RA'), new RegisterPinArray([]))]));
@@ -56,26 +53,14 @@ export const RegistryDevice = () => {
     }, [registerArray]);
 
     useEffect(() => {
-        console.log(assignLeftPinArray.Value);
+        console.log(assignRegisterPinArray.Value);
         if (selectRegister) {
-            //TODO
-            //pinNoからレジスターピンを作る
-
-            let registerNo: number;
-            if (selectRegister.RegisterPinArray.Value.length === 0) {
-                registerNo = 0;
-            } else {
-                registerNo = selectRegister.RegisterPinArray.Value[selectRegister.RegisterPinArray.Value.length - 1].RegisterNo + 1;
-            }
-
-            // const assignRegister: Register = new Register(selectRegister.Name, new RegisterArray(pins));
-            // dispatchRegisterArray({ type: 'updat-register', register: assignRegister });
+            const newRegisterPinArray: RegisterPinArray = new RegisterPinArray(assignRegisterPinArray.Value);
+            const newRegister: Register = new Register(selectRegister.Name, newRegisterPinArray);
+            dispatchRegisterArray({ type: 'updat-register', register: newRegister });
         }
-    }, [assignLeftPinArray, dispatchRegisterArray]);
+    }, [assignRegisterPinArray, dispatchRegisterArray, selectRegister,]);
 
-    useEffect(() => {
-        console.log(assignRightPinArray.Value);
-    }, [assignRightPinArray]);
 
     return (
         <IonPage>
@@ -93,8 +78,7 @@ export const RegistryDevice = () => {
                         x={rootWidth}
                         y={rootHeight}
                         pinLength={pinLength}
-                        dispatchAssignLeftPinArray={dispatchAssignLeftPinArray}
-                        dispatchAssignRightPinArray={dispatchAssignRightPinArray} />
+                        dispatchAssignRegisterPinArray={dispatchAssignRegisterPinArray} />
                 </svg>
             </IonHeader>
 
