@@ -1,5 +1,5 @@
 import { IonButton, IonContent, IonHeader, IonIcon, IonInput, IonLabel, IonList, IonListHeader, IonPage, IonSelect, IonSelectOption, IonTitle, IonToolbar } from "@ionic/react"
-import { useCallback, useEffect, useReducer, useRef, useState } from "react"
+import { useCallback, useEffect, useReducer, useState } from "react"
 import { DeviceData } from "../../models/Devices/DeviceData"
 import { Device } from "../../components/Device/Device";
 import { addCircleOutline } from 'ionicons/icons'
@@ -10,27 +10,21 @@ import { RegisterName } from "../../models/Registers/RegisterName";
 import { RegisterItem } from "../../components/Registers/RegisterItem/RegisterItem";
 import { RegisterPinArray } from "../../models/Registers/RegisterPinArray";
 import { AssignRegisterPinArrayReducer } from "../../models/Assigns/AssignRegisterPinArray.resucer";
+import { useRecoilState } from "recoil";
+import { SelectRegisterAtom } from "../../models/Registers/SelectRegister.atom";
 
 export const RegistryDevice = () => {
-
-    const rootRef = useRef<SVGSVGElement>(null);
-    const [rootWidth, setRootWidth] = useState<number>(0);
-    const [rootHeight, setRootHeight] = useState<number>(0);
-
     const [pinLength, setPinLength] = useState<number>(8);
 
     const [assignRegisterPinArray, dispatchAssignRegisterPinArray] = useReducer(AssignRegisterPinArrayReducer, new RegisterPinArray([]));
 
-
     const [registerArray, dispatchRegisterArray] = useReducer(RegisterArrayReducer, new RegisterArray([new Register(new RegisterName('RA'), new RegisterPinArray([]))]));
-    const [selectRegister, setSelectRegister] = useState<Register>(registerArray.Value[0]);
+    const [selectRegister, setSelectRegister] = useRecoilState<Register>(SelectRegisterAtom);
+
 
     useEffect(() => {
-        if (!rootRef.current) { return; }
-        const rect = rootRef.current.getBBox();
-        setRootWidth(rect.width * 0.7);
-        setRootHeight(rect.height * 0.05);
-    }, [rootRef.current, setRootWidth, setRootHeight]);
+        setSelectRegister(registerArray.Value[0]);
+    }, []);
 
 
 
@@ -54,12 +48,12 @@ export const RegistryDevice = () => {
 
     useEffect(() => {
         console.log(assignRegisterPinArray.Value);
-        if (selectRegister) {
-            const newRegisterPinArray: RegisterPinArray = new RegisterPinArray(assignRegisterPinArray.Value);
-            const newRegister: Register = new Register(selectRegister.Name, newRegisterPinArray);
-            dispatchRegisterArray({ type: 'updat-register', register: newRegister });
-        }
-    }, [assignRegisterPinArray, dispatchRegisterArray, selectRegister,]);
+        // if (selectRegister) {
+        //     const newRegisterPinArray: RegisterPinArray = new RegisterPinArray(assignRegisterPinArray.Value);
+        //     const newRegister: Register = new Register(selectRegister.Name, newRegisterPinArray);
+        //     dispatchRegisterArray({ type: 'updat-register', register: newRegister });
+        // }
+    }, [assignRegisterPinArray,]);
 
 
     return (
@@ -67,16 +61,18 @@ export const RegistryDevice = () => {
             <IonHeader>
                 <IonToolbar>
                     <IonTitle>
-                        {device.Name}
+                        {
+                            selectRegister ?
+                                `Assign ${selectRegister.Name.Value} Registry` :
+                                device.Name
+                        }
                     </IonTitle>
                 </IonToolbar>
             </IonHeader>
 
             <IonHeader slot='fixed'>
-                <svg ref={rootRef} style={{ width: '100vw', height: '50vh', background: 'gray' }} >
+                <svg style={{ width: '100vw', height: '50vh', background: 'gray' }} >
                     <Device
-                        x={rootWidth}
-                        y={rootHeight}
                         pinLength={pinLength}
                         dispatchAssignRegisterPinArray={dispatchAssignRegisterPinArray} />
                 </svg>

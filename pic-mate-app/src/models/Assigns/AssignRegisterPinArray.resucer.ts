@@ -19,7 +19,7 @@ export const AssignRegisterPinArrayReducer = (state: RegisterPinArray, action: A
                 registerNo = state.Value[state.Value.length - 1].RegisterNo + 1;
             }
             //レジスターピンリストに追加
-            const array: RegisterPin[] = [...state.Value, new RegisterPin(action.pin, registerNo)];
+            const array: RegisterPin[] = [...state.Value, new RegisterPin(action.pin, action.registerName, registerNo)];
             const newAssignRegisterPinArray: RegisterPinArray = new RegisterPinArray(array);
             return newAssignRegisterPinArray;
         } case 'unassign': {
