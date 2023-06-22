@@ -17,5 +17,7 @@
         "@typescript-eslint",
         "react"
     ],
-    "rules": {}
+    "rules": {
+        "@typescript-eslint/no-inferrable-types": "off"
+    }
 }

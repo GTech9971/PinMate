@@ -53,7 +53,7 @@ export const RegistryDevice = () => {
         //     const newRegister: Register = new Register(selectRegister.Name, newRegisterPinArray);
         //     dispatchRegisterArray({ type: 'updat-register', register: newRegister });
         // }
-    }, [assignRegisterPinArray,]);
+    }, []);
 
 
     return (
