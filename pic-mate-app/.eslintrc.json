@@ -1,22 +1,3 @@
-# PinMate
-
- ピンアサインを補助するアプリ
-
-## [eslint-plugin-react-hooks](https://www.npmjs.com/package/eslint-plugin-react-hooks)
-
-install  eslint
-`npm install -g eslint`
-
-initialize eslint
-in project root
-`eslint --init`
-
-install eslint-plugin-react-hooks
-`npm install eslint-plugin-react-hooks`
-
-edit eslintrc.json
-
-```
 {
     "env": {
         "browser": true,
@@ -38,4 +19,3 @@ edit eslintrc.json
     ],
     "rules": {}
 }
-```
