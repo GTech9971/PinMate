@@ -17,8 +17,8 @@ export class RegisterPin {
         private readonly registerName: RegisterName,
         private readonly registerNo: number) {
 
-        if (registerNo < 0) {
-            throw new Error('');
-        }
+        // if (registerNo < 0) {
+        //     throw new Error('');
+        // }
     }
 }

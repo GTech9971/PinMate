@@ -12,4 +12,8 @@ export class RegisterPinArray {
         const uniqueSortedArray: RegisterPin[] = Array.from(new Set(this.array)).sort();
         this.value = uniqueSortedArray;
     }
+
+    public get MaxRegisterNo(): number {
+        return this.value.reduce((max, current) => (current.RegisterNo > max ? current.RegisterNo : max), this.value[0].RegisterNo);
+    }
 }

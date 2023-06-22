@@ -8,11 +8,11 @@ export interface RegisterTextProp {
 }
 
 export const RegisterText = (props: RegisterTextProp) => {
-    //TODO マーカーとテキストの位置調整
-    const lineX1: number = props.isLeft ? -30 : props.x;
-    const lineX2: number = props.isLeft ? 0 : props.x;
-    const textX: number = (props.x * 2) + ((props.x * 2) * 0.2);
-    const textY: number = (props.y) + (props.y) * 0.05;
+    const lineX1: number = props.isLeft ? -30 : props.x * 1.2;
+    const lineX2: number = props.isLeft ? 0 : props.x * 1.2 + 30;
+    const lineY1: number = props.y + 8;
+    const textX: number = props.isLeft ? -50 : props.x * 1.2 + 50;
+    const textY: number = props.y + 12;
 
     return (
         <>
@@ -28,15 +28,18 @@ export const RegisterText = (props: RegisterTextProp) => {
                 </marker>
             </defs>
 
-            <line x1={lineX1} y1={props.y * 1.15} x2={lineX2} y2={props.y * 1.15}
+            <line x1={lineX1} y1={lineY1} x2={lineX2} y2={lineY1}
                 stroke="black"
                 markerMid="line"
                 markerStart="url(#arrowhead-left)"
                 markerEnd="url(#arrowhead-right)" />
 
             <text x={textX} y={textY} fill="white" textAnchor="middle">
-                {props.registerPin.RegisterName.Value}
-                {props.registerPin.RegisterNo}
+                {
+
+                    `${props.registerPin.RegisterName.Value}${props.registerPin.RegisterNo}`
+                }
+
             </text>
         </>
     )

@@ -12,11 +12,19 @@ import { RegisterPinArray } from "../../models/Registers/RegisterPinArray";
 import { AssignRegisterPinArrayReducer } from "../../models/Assigns/AssignRegisterPinArray.resucer";
 import { useRecoilState } from "recoil";
 import { SelectRegisterAtom } from "../../models/Registers/SelectRegister.atom";
+import { Pin } from "../../models/Devices/Pin";
+import { RegisterPin } from "../../models/Registers/RegisterPin";
 
 export const RegistryDevice = () => {
     const [pinLength, setPinLength] = useState<number>(8);
 
-    const [assignRegisterPinArray, dispatchAssignRegisterPinArray] = useReducer(AssignRegisterPinArrayReducer, new RegisterPinArray([]));
+    //ピン足を引数のピンの長さから作成する
+    const rergisterPinFootArray: RegisterPinArray = new RegisterPinArray(
+        Array.from({ length: pinLength / 2 }, (_, i) => new RegisterPin(new Pin(i + 1), new RegisterName(''), -1)).concat(
+            Array.from({ length: pinLength / 2 }, (_, i) => new RegisterPin(new Pin(i + (pinLength / 2) + 1), new RegisterName(''), -1)).reverse()
+        ));
+
+    const [assignRegisterPinArray, dispatchAssignRegisterPinArray] = useReducer(AssignRegisterPinArrayReducer, rergisterPinFootArray);
 
     const [registerArray, dispatchRegisterArray] = useReducer(RegisterArrayReducer, new RegisterArray([new Register(new RegisterName('RA'), new RegisterPinArray([]))]));
     const [selectRegister, setSelectRegister] = useRecoilState<Register>(SelectRegisterAtom);
@@ -24,7 +32,7 @@ export const RegistryDevice = () => {
 
     useEffect(() => {
         setSelectRegister(registerArray.Value[0]);
-    }, []);
+    }, [setSelectRegister, registerArray]);
 
 
 
@@ -48,12 +56,7 @@ export const RegistryDevice = () => {
 
     useEffect(() => {
         console.log(assignRegisterPinArray.Value);
-        // if (selectRegister) {
-        //     const newRegisterPinArray: RegisterPinArray = new RegisterPinArray(assignRegisterPinArray.Value);
-        //     const newRegister: Register = new Register(selectRegister.Name, newRegisterPinArray);
-        //     dispatchRegisterArray({ type: 'updat-register', register: newRegister });
-        // }
-    }, []);
+    }, [assignRegisterPinArray]);
 
 
     return (
@@ -73,7 +76,7 @@ export const RegistryDevice = () => {
             <IonHeader slot='fixed'>
                 <svg style={{ width: '100vw', height: '50vh', background: 'gray' }} >
                     <Device
-                        pinLength={pinLength}
+                        registerPinArray={assignRegisterPinArray}
                         dispatchAssignRegisterPinArray={dispatchAssignRegisterPinArray} />
                 </svg>
             </IonHeader>

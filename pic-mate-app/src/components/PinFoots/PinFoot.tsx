@@ -44,7 +44,7 @@ export const PinFoot = (props: PinFootProp) => {
         if (!footRef.current) { return; }
         const rect = footRef.current.getBBox();
         setTextMargin(rect.width * 1.2);
-    }, [footRef.current?.getBBox(), setTextMargin, props]);
+    }, [footRef, setTextMargin, props]);
 
     /**
      * ピンの足をクリックした際
@@ -65,7 +65,7 @@ export const PinFoot = (props: PinFootProp) => {
             });
             return next;
         });
-    }, [selectRegister, setSelect, props.dispatchAssignRegisterPinArray, props.registerPin]);
+    }, [selectRegister, setSelect, presentAlert, props]);
 
     return (
         <>
