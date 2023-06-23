@@ -6,6 +6,10 @@ import { RegisterName } from "../Registers/RegisterName"
  */
 export type AssignRegisterPinArrayAction = |
 {
+    type: 'init',
+    pinLength: number,
+} |
+{
     //レジスターピンをアサイン
     type: 'assign',
     pin: Pin,

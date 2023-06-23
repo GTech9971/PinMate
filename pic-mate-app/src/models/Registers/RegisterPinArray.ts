@@ -1,4 +1,6 @@
+import { RegisterName } from "./RegisterName";
 import { RegisterPin } from "./RegisterPin";
+import { UnDetectRegisterName } from "./UnDetectRegisterName";
 
 /**
  * レジスターピンリスト
@@ -13,7 +15,20 @@ export class RegisterPinArray {
         this.value = uniqueSortedArray;
     }
 
-    public get MaxRegisterNo(): number {
-        return this.value.reduce((max, current) => (current.RegisterNo > max ? current.RegisterNo : max), this.value[0].RegisterNo);
+    public maxRegisterNo(registerName: RegisterName): number {
+        if (registerName instanceof UnDetectRegisterName) {
+            throw new Error("レジスター名が設定されていません");
+        }
+        return this.value
+            .filter((registerPin) => registerPin.RegisterName.Value === registerName.Value)
+            .reduce((max, current) => (current.RegisterNo.Value > max ? current.RegisterNo.Value : max), this.value[0].RegisterNo.Value);
+    }
+
+    public nextRegisterNo(registerName: RegisterName): number {
+        if (registerName instanceof UnDetectRegisterName) {
+            throw new Error("レジスター名が設定されていません");
+        }
+        const maxRegisterNo: number = this.maxRegisterNo(registerName);
+        return maxRegisterNo + 1;
     }
 }

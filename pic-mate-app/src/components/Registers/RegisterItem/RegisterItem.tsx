@@ -1,34 +1,34 @@
 import { IonItemSliding, IonItem, IonListHeader, IonLabel, IonItemOptions, IonItemOption } from "@ionic/react"
-import { Register } from "../../../models/Registers/Register"
 import { useCallback } from "react"
+import { RegisterName } from "../../../models/Registers/RegisterName";
 
-export interface RegisterItemProp {
-    register: Register,
-    onClickDeleteRegisterBtn: (register: Register) => void,
-    onClick?: (register: Register) => void,
+export interface RegisterNameItemProp {
+    registerName: RegisterName,
+    onClickDeleteRegisterNameBtn: (registerName: RegisterName) => void,
+    onClick?: (registerName: RegisterName) => void,
     select?: boolean,
 }
-export const RegisterItem = (props: RegisterItemProp) => {
+export const RegisterNameItem = (props: RegisterNameItemProp) => {
 
-    const onClickRegisterItem = useCallback(() => {
+    const onClickRegisterNameItem = useCallback(() => {
         if (props.onClick) {
-            props.onClick(props.register);
+            props.onClick(props.registerName);
         }
-    }, [props.register, props.onClick]);
+    }, [props]);
 
     return (
         <IonItemSliding>
             <IonItem button
                 detail={false}
-                onClick={onClickRegisterItem}>
+                onClick={onClickRegisterNameItem}>
                 <IonListHeader color={props.select ? 'primary' : undefined}>
-                    <IonLabel>{props.register.Name.Value}</IonLabel>
+                    <IonLabel>{props.registerName.Value}</IonLabel>
                 </IonListHeader>
             </IonItem>
 
             <IonItemOptions>
                 <IonItemOption color='danger'
-                    onClick={() => props.onClickDeleteRegisterBtn(props.register)}>
+                    onClick={() => props.onClickDeleteRegisterNameBtn(props.registerName)}>
                     Delete
                 </IonItemOption>
             </IonItemOptions>

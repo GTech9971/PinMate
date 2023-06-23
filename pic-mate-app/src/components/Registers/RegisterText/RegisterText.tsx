@@ -1,4 +1,5 @@
 import { RegisterPin } from "../../../models/Registers/RegisterPin"
+import { UnAssignRegisterPin } from "../../../models/Registers/UnAssignRegisterPin";
 
 export interface RegisterTextProp {
     x: number,
@@ -36,8 +37,10 @@ export const RegisterText = (props: RegisterTextProp) => {
 
             <text x={textX} y={textY} fill="white" textAnchor="middle">
                 {
-
-                    `${props.registerPin.RegisterName.Value}${props.registerPin.RegisterNo}`
+                    props.registerPin instanceof UnAssignRegisterPin ?
+                        ``
+                        :
+                        `${props.registerPin.RegisterName.Value}${props.registerPin.RegisterNo.Value}`
                 }
 
             </text>

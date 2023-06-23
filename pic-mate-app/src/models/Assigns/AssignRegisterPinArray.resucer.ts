@@ -1,6 +1,9 @@
-import { RegisterName } from "../Registers/RegisterName";
+import { Pin } from "../Devices/Pin";
+import { AssignRegisterPin } from "../Registers/AssignRegisterPin";
+import { DetectRegisterNo } from "../Registers/DetectRegisterNo";
 import { RegisterPin } from "../Registers/RegisterPin";
 import { RegisterPinArray } from "../Registers/RegisterPinArray";
+import { UnAssignRegisterPin } from "../Registers/UnAssignRegisterPin";
 import { AssignRegisterPinArrayAction } from "./AssignRegisterPinArray.action";
 
 /**
@@ -11,14 +14,20 @@ import { AssignRegisterPinArrayAction } from "./AssignRegisterPinArray.action";
  */
 export const AssignRegisterPinArrayReducer = (state: RegisterPinArray, action: AssignRegisterPinArrayAction): RegisterPinArray => {
     switch (action.type) {
-        case 'assign': {
+        case 'init': {
+            const rergisterPinFootArray: RegisterPinArray = new RegisterPinArray(
+                Array.from({ length: action.pinLength / 2 }, (_, i) => new UnAssignRegisterPin(new Pin(i + 1))).concat(
+                    Array.from({ length: action.pinLength / 2 }, (_, i) => new UnAssignRegisterPin(new Pin(i + (action.pinLength / 2) + 1))).reverse()
+                ));
+            return rergisterPinFootArray;
+        } case 'assign': {
             //新しいレジスター番号を作る
-            const registerNo: number = state.MaxRegisterNo + 1;
+            const registerNo: DetectRegisterNo = new DetectRegisterNo(state.nextRegisterNo(action.registerName));
             //レジスターピンリストに追加
             const array: RegisterPin[] = state.Value.map((registerPin) => {
                 return registerPin.Pin.No === action.pin.No
                     ?
-                    new RegisterPin(registerPin.Pin, action.registerName, registerNo)
+                    new AssignRegisterPin(registerPin.Pin, action.registerName, registerNo)
                     :
                     registerPin
             });
@@ -28,7 +37,7 @@ export const AssignRegisterPinArrayReducer = (state: RegisterPinArray, action: A
             //レジスターピンリストからピン番号と一致するレジスター番号、レジスター名を削除
             const array: RegisterPin[] = state.Value.map((registerPin) => {
                 return registerPin.Pin.No === action.pin.No
-                    ? new RegisterPin(registerPin.Pin, new RegisterName(''), 0)
+                    ? new UnAssignRegisterPin(registerPin.Pin)
                     :
                     registerPin
             });

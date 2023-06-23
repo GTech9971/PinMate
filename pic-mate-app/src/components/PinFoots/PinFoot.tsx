@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AssignRegisterPinArrayAction } from "../../models/Assigns/AssignRegisterPinArray.action";
 import { RegisterPin } from "../../models/Registers/RegisterPin";
-import { Register } from "../../models/Registers/Register";
 import { useRecoilValue } from "recoil";
-import { SelectRegisterAtom } from "../../models/Registers/SelectRegister.atom";
 import { useIonAlert } from "@ionic/react";
 import { RegisterText } from "../Registers/RegisterText/RegisterText";
+import { SelectRegisterNameAtom } from "../../models/Registers/SelectRegisterName.atom";
+import { RegisterName } from "../../models/Registers/RegisterName";
 
 export interface PinFootProp {
     /** ピン足のx座標 */
@@ -31,7 +31,7 @@ export const PinFoot = (props: PinFootProp) => {
     const [select, setSelect] = useState<boolean>(false);
     const [textMargin, setTextMargin] = useState<number>(0);
 
-    const selectRegister: Register = useRecoilValue<Register>(SelectRegisterAtom);
+    const selectRegisterName: RegisterName = useRecoilValue<RegisterName>(SelectRegisterNameAtom);
 
     const fillColor: 'gray' | 'white' = select ? 'gray' : 'white';
     const textMarginTop: number = 15;
@@ -50,7 +50,7 @@ export const PinFoot = (props: PinFootProp) => {
      * ピンの足をクリックした際
      */
     const onClickFoot = useCallback(() => {
-        if (!selectRegister) {
+        if (!selectRegisterName) {
             presentAlert({ message: 'Select Assign Register!' });
             return;
         }
@@ -61,11 +61,11 @@ export const PinFoot = (props: PinFootProp) => {
             props.dispatchAssignRegisterPinArray({
                 type: next ? "assign" : 'unassign',
                 pin: props.registerPin.Pin,
-                registerName: selectRegister.Name
+                registerName: selectRegisterName
             });
             return next;
         });
-    }, [selectRegister, setSelect, presentAlert, props]);
+    }, [selectRegisterName, setSelect, presentAlert, props]);
 
     return (
         <>

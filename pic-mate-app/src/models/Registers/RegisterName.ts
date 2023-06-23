@@ -1,8 +1,4 @@
-export class RegisterName {
+export interface RegisterName {
 
-    public get Value(): string { return this.name; }
-
-    constructor(private readonly name: string) {
-        // if (!name) { throw new Error(''); }
-    }
+    get Value(): string;
 }

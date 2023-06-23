@@ -4,11 +4,11 @@ import { PinFoot } from "../PinFoots/PinFoot";
 import { AssignRegisterPinArrayAction } from "../../models/Assigns/AssignRegisterPinArray.action";
 import { RegisterPinArray } from "../../models/Registers/RegisterPinArray";
 
-export interface DevicePorp {
+export interface DeviceProp {
     registerPinArray: RegisterPinArray,
     dispatchAssignRegisterPinArray: React.Dispatch<AssignRegisterPinArrayAction>
 }
-export const Device = (props: DevicePorp) => {
+export const Device = (props: DeviceProp) => {
 
     const deviceRef = useRef<SVGRectElement>(null);
     const [pinFootTopMargin, setPinFootTopMargin] = useState<number>(0);
@@ -44,7 +44,7 @@ export const Device = (props: DevicePorp) => {
             <DeviceHeader cx={15} cy={15} />
             <rect ref={deviceRef}
                 width='40vw'
-                height='45vh'
+                height='40vh'
                 rx={10}
                 fill='none'
                 stroke='white' />

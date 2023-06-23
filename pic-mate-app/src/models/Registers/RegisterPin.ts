@@ -1,24 +1,17 @@
 import { Pin } from "../Devices/Pin";
 import { RegisterName } from "./RegisterName";
+import { RegisterNo } from "./RegisterNo";
 
 /**
  * レジスターの番号を持ったピン
  */
-export class RegisterPin {
+export interface RegisterPin {
     /** ピン */
-    public get Pin(): Pin { return this.pin; }
+    get Pin(): Pin;
     /** レジスター名 */
-    public get RegisterName(): RegisterName { return this.registerName; }
+    get RegisterName(): RegisterName;
 
     /** レジスター番号 */
-    public get RegisterNo(): number { return this.registerNo; }
+    get RegisterNo(): RegisterNo;
 
-    constructor(private readonly pin: Pin,
-        private readonly registerName: RegisterName,
-        private readonly registerNo: number) {
-
-        // if (registerNo < 0) {
-        //     throw new Error('');
-        // }
-    }
 }
