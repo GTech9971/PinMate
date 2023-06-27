@@ -17,7 +17,7 @@ export class RegisterPinArray {
 
     public maxRegisterNo(registerName: RegisterName): number {
         if (registerName instanceof UnDetectRegisterName) {
-            throw new Error("レジスター名が設定されていません");
+            throw new Error("UnDetect Register Name");
         }
         return this.value
             .filter((registerPin) => registerPin.RegisterName.Value === registerName.Value)
@@ -26,9 +26,23 @@ export class RegisterPinArray {
 
     public nextRegisterNo(registerName: RegisterName): number {
         if (registerName instanceof UnDetectRegisterName) {
-            throw new Error("レジスター名が設定されていません");
+            throw new Error("UnDetect Register Name");
         }
         const maxRegisterNo: number = this.maxRegisterNo(registerName);
         return maxRegisterNo + 1;
+    }
+
+    /**
+     * アサインされていないピンが存在するか調べる
+     * @returns true:アサインされていないピンが存在
+     */
+    public existsUnAssignRegisterPin(): boolean {
+        for (const pin of this.value) {
+            if (pin.RegisterName instanceof UnDetectRegisterName) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

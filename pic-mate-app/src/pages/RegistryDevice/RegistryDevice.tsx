@@ -1,6 +1,8 @@
-import { IonButton, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonLabel, IonList, IonListHeader, IonPage, IonSelect, IonSelectOption, IonTitle, IonToolbar } from "@ionic/react"
+import {
+    IonButton, IonButtons, IonContent, IonHeader, IonIcon, IonInput, IonItem, IonLabel,
+    IonList, IonListHeader, IonPage, IonSelect, IonSelectOption, IonTitle, IonToolbar, useIonAlert
+} from "@ionic/react"
 import { useCallback, useEffect, useReducer, useState } from "react"
-import { DeviceData } from "../../models/Devices/DeviceData"
 import { Device } from "../../components/Device/Device";
 import { addCircleOutline } from 'ionicons/icons'
 import { RegisterNameArrayReducer } from "../../models/Registers/RegisterNameArray.reducer";
@@ -14,6 +16,11 @@ import { RegisterName } from "../../models/Registers/RegisterName";
 import { SelectRegisterNameAtom } from "../../models/Registers/SelectRegisterName.atom";
 import { RegisterNameArray } from "../../models/Registers/RegisterNameArray";
 import { DetectRegisterName } from "../../models/Registers/DetectRegisterName";
+import { PICData } from "../../models/PICs/PICData";
+import { UNDetectPICName } from "../../models/PICs/UnDetectPICName";
+import { DetectPICName } from "../../models/PICs/DetectPICName";
+import { usePICDataIO } from "../../models/PICs/usePICDataIO";
+import { PICName } from "../../models/PICs/PICName";
 
 /**
  * デバイス登録
@@ -21,14 +28,15 @@ import { DetectRegisterName } from "../../models/Registers/DetectRegisterName";
  */
 export const RegistryDevice = () => {
     const [pinLength, setPinLength] = useState<number>(8);
+    const [presentAlert] = useIonAlert();
 
     //ピン足を引数のピンの長さから作成する
-    const rergisterPinFootArray: RegisterPinArray = new RegisterPinArray(
+    const registerPinFootArray: RegisterPinArray = new RegisterPinArray(
         Array.from({ length: pinLength / 2 }, (_, i) => new UnAssignRegisterPin(new Pin(i + 1))).concat(
             Array.from({ length: pinLength / 2 }, (_, i) => new UnAssignRegisterPin(new Pin(i + (pinLength / 2) + 1))).reverse()
         ));
     /** レジスターピンリスト */
-    const [assignRegisterPinArray, dispatchAssignRegisterPinArray] = useReducer(AssignRegisterPinArrayReducer, rergisterPinFootArray);
+    const [assignRegisterPinArray, dispatchAssignRegisterPinArray] = useReducer(AssignRegisterPinArrayReducer, registerPinFootArray);
     /** レジスター名リスト */
     const [registerNameArray, dispatchRegisterNameArray] = useReducer(RegisterNameArrayReducer, new RegisterNameArray([new DetectRegisterName("RA")]));
     /** 選択済レジスター名 */
@@ -38,15 +46,18 @@ export const RegistryDevice = () => {
         setSelectRegisterName(registerNameArray.Value[0]);
     }, [setSelectRegisterName, registerNameArray]);
 
-
-    const [device, setDevice] = useState<DeviceData>(new DeviceData('PIC16F1827', []));
+    /** PIC名 */
+    const [picName, setPICName] = useState<PICName>(new UNDetectPICName());
+    /** PICDataのIO */
+    const { savePICData } = usePICDataIO();
 
     /**
      * デバイス名変更
      */
-    const onChangeName = useCallback((e: any) => {
-        setDevice((prev) => new DeviceData(e, prev.Registers));
-    }, [setDevice,]);
+    const onChangeName = useCallback((e: string | number | null | undefined) => {
+        if (!e) { return; }
+        setPICName(new DetectPICName(e as string));
+    }, [setPICName,]);
 
     /**
      * レジスター名追加
@@ -72,6 +83,20 @@ export const RegistryDevice = () => {
     }, [dispatchAssignRegisterPinArray, setPinLength]);
 
 
+    /**
+     * PIC保存ボタン押下時
+     */
+    const onClickSavePICBtn = useCallback(async () => {
+        try {
+            const picData: PICData = new PICData(picName, assignRegisterPinArray);
+            await savePICData(picData);
+            await presentAlert({ message: `Save:${picData.Name.Value}` });
+        } catch (e) {
+            const error: Error = e as Error;
+            await presentAlert({ header: 'Error', message: error.message });
+        }
+    }, [picName, assignRegisterPinArray, savePICData, presentAlert]);
+
     return (
         <IonPage>
             <IonHeader>
@@ -80,9 +105,14 @@ export const RegistryDevice = () => {
                         {
                             selectRegisterName ?
                                 `Assign ${selectRegisterName.Value} Registry` :
-                                device.Name
+                                picName.Value
                         }
                     </IonTitle>
+                    <IonButtons slot="end">
+                        <IonButton onClick={onClickSavePICBtn}>
+                            Save
+                        </IonButton>
+                    </IonButtons>
                 </IonToolbar>
             </IonHeader>
 
@@ -102,15 +132,15 @@ export const RegistryDevice = () => {
                     </IonListHeader>
                     <IonItem>
                         <IonInput label="Name"
-                            labelPlacement='floating'
+                            labelPlacement='stacked'
                             type="text"
                             placeholder="PIC16F1827"
-                            value={device.Name}
-                            onIonChange={(e: any) => onChangeName(e.target.value)} />
+                            value={picName.Value}
+                            onIonChange={e => onChangeName(e.target.value)} />
                     </IonItem>
                     <IonItem>
                         <IonSelect label="Pin Length"
-                            labelPlacement="floating"
+                            labelPlacement='stacked'
                             value={pinLength}
                             onIonChange={e => onChangePinLength(e.target.value)}>
                             <IonSelectOption value={8}>8</IonSelectOption>
