@@ -5,11 +5,11 @@ import { PICName } from "./PICName";
  */
 export class DetectPICName implements PICName {
     get Value(): string {
-        return this.name;
+        return this.value;
     }
 
-    constructor(private readonly name: string) {
-        if (!this.name) {
+    constructor(private readonly value: string) {
+        if (!this.value) {
             throw new Error('Invalid Parameter PIC Name is not Empty');
         }
     }

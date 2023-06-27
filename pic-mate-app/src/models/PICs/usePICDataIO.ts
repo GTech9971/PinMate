@@ -14,25 +14,43 @@ export const usePICDataIO = () => {
         return `${PIC_DATA_KEY}-${picName.Value}`;
     }, []);
 
+    const serialize = useCallback((value: any): string => {
+        return JSON.stringify(value, (_, propValue) => {
+            if (typeof propValue === 'function') {
+                return propValue.toString();
+            }
+            return propValue;
+        });
+    }, []);
+
+    const deserialize = useCallback((serializedValue: string): PICData => {
+        return JSON.parse(serializedValue, (_, propValue) => {
+            if (typeof propValue === 'string' && propValue.startsWith('function')) {
+                return eval(`(${propValue})`);
+            }
+            return propValue;
+        });
+    }, []);
+
     /**
      * PICDataを保存する
      */
     const savePICData = useCallback(async (picData: PICData) => {
-        const json: string = JSON.stringify(picData);
+        const json: string = serialize(picData);
         const key: string = createKeyByPICName(picData.Name);
         await storage.set(key, json);
-    }, [storage, createKeyByPICName]);
+    }, [storage, createKeyByPICName, serialize]);
 
     /**
      * PICDataを読み込む
      */
-    const loadPICData = useCallback(async (picName: PICName): Promise<PICData | undefined> => {
+    const loadPICData = useCallback(async (picName: PICName): Promise<PICData | null> => {
         const key: string = createKeyByPICName(picName);
         const json: string = await storage.get(key);
-        if (!json) { return undefined; }
-        const picData: PICData = JSON.parse(json);
+        if (!json) { return null; }
+        const picData: PICData = deserialize(json);
         return picData;
-    }, [storage, createKeyByPICName]);
+    }, [storage, createKeyByPICName, deserialize]);
 
     /**
      * PICDataを全て読み込む
@@ -41,12 +59,12 @@ export const usePICDataIO = () => {
         const picDataArray: PICData[] = [];
         await storage.forEach((value, key) => {
             if (key.includes(PIC_DATA_KEY)) {
-                const picData: PICData = JSON.parse(value);
+                const picData: PICData = deserialize(value);
                 picDataArray.push(picData);
             }
         });
         return picDataArray;
-    }, [storage]);
+    }, [storage, deserialize]);
 
     /**
      * PICDataを削除する

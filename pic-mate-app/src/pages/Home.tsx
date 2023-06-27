@@ -1,39 +1,74 @@
-import { IonAccordion, IonAccordionGroup, IonContent, IonHeader, IonItem, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { IonAccordion, IonAccordionGroup, IonContent, IonFab, IonFabButton, IonHeader, IonIcon, IonItem, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import './Home.css';
 import { PIC } from '../components/PIC/PIC';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { BinaryCard } from '../components/Registers/BinaryCard/BinaryCard';
 import { HexCard } from '../components/Registers/HexCard/HexCard';
 import { DecCard } from '../components/Registers/DecCard/DecCard';
+import { add } from 'ionicons/icons'
+import { usePICDataIO } from '../models/PICs/usePICDataIO';
+import { PICData } from '../models/PICs/PICData';
+import { PICCard } from '../components/PICCard/PICCard';
+import { useHistory } from 'react-router';
 
 const Home: React.FC = () => {
+  const history = useHistory();
 
-  const rootRef = useRef<SVGSVGElement>(null);
-  const [rootWidth, setRootWidth] = useState<number>(0);
-  const [rootHeight, setRootHeight] = useState<number>(0);
+  // const rootRef = useRef<SVGSVGElement>(null);
+  // const [rootWidth, setRootWidth] = useState<number>(0);
+  // const [rootHeight, setRootHeight] = useState<number>(0);
+
+  // useEffect(() => {
+  //   if (!rootRef.current) { return; }
+  //   const rect = rootRef.current.getBBox();
+  //   setRootWidth(rect.width * 0.7);
+  //   setRootHeight(rect.height * 0.05);
+  // }, [rootRef.current, setRootWidth, setRootHeight]);
+
+  const { loadAllPICData } = usePICDataIO();
+  const [picArray, setPICArray] = useState<PICData[]>([]);
 
   useEffect(() => {
-    if (!rootRef.current) { return; }
-    const rect = rootRef.current.getBBox();
-    setRootWidth(rect.width * 0.7);
-    setRootHeight(rect.height * 0.05);
-  }, [rootRef.current, setRootWidth, setRootHeight]);
+    loadAllPICData().then(array => {
+      setPICArray(array);
+      console.log(array);
+    });
+  }, [loadAllPICData, setPICArray]);
+
+
+  /**
+   * 登録画面に遷移する
+   */
+  const onClickRegistryFabBtn = useCallback(() => {
+    history.push('registry');
+  }, [history]);
 
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>PIC16F1827</IonTitle>
+          <IonTitle>PinMate</IonTitle>
         </IonToolbar>
       </IonHeader>
 
-      <IonHeader slot='fixed'>
-        <svg ref={rootRef} style={{ width: '100vw', height: '50vh', background: 'gray' }} >
-          {/* <PIC x={rootWidth} y={rootHeight} pinLength={18} /> */}
-        </svg>
-      </IonHeader>
 
       <IonContent fullscreen>
+        {
+          picArray.map((picData, index) => {
+            return <PICCard
+              key={index}
+              picData={picData} />
+          })
+        }
+      </IonContent>
+
+      <IonFab horizontal='end' vertical='bottom'>
+        <IonFabButton onClick={onClickRegistryFabBtn}>
+          <IonIcon icon={add} />
+        </IonFabButton>
+      </IonFab>
+
+      {/* <IonContent fullscreen>
         <IonAccordionGroup multiple>
 
           <IonAccordion value='ra'>
@@ -61,7 +96,7 @@ const Home: React.FC = () => {
           </IonAccordion>
         </IonAccordionGroup>
 
-      </IonContent>
+      </IonContent> */}
     </IonPage>
   );
 };
