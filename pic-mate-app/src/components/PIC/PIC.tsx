@@ -1,14 +1,16 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { DeviceHeader } from "../DeviceHeader/DeviceHeader";
+import { PICHeader } from "../PICHeader/DeviceHeader";
 import { PinFoot } from "../PinFoots/PinFoot";
 import { AssignRegisterPinArrayAction } from "../../models/Assigns/AssignRegisterPinArray.action";
 import { RegisterPinArray } from "../../models/Registers/RegisterPinArray";
+import { PICName } from "../../models/PICs/PICName";
 
-export interface DeviceProp {
+export interface PICProp {
+    picName: PICName,
     registerPinArray: RegisterPinArray,
     dispatchAssignRegisterPinArray: React.Dispatch<AssignRegisterPinArrayAction>
 }
-export const Device = (props: DeviceProp) => {
+export const PIC = (props: PICProp) => {
 
     const deviceRef = useRef<SVGRectElement>(null);
     const [pinFootTopMargin, setPinFootTopMargin] = useState<number>(0);
@@ -41,7 +43,7 @@ export const Device = (props: DeviceProp) => {
 
     return (
         <g style={{ transform: `translate(30vw, 2vh)` }}>
-            <DeviceHeader cx={15} cy={15} />
+            <PICHeader cx={15} cy={15} />
             <rect ref={deviceRef}
                 width='40vw'
                 height='40vh'

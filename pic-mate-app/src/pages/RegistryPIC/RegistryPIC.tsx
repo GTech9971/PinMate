@@ -3,7 +3,7 @@ import {
     IonList, IonListHeader, IonPage, IonSelect, IonSelectOption, IonTitle, IonToolbar, useIonAlert
 } from "@ionic/react"
 import { useCallback, useEffect, useReducer, useState } from "react"
-import { Device } from "../../components/Device/Device";
+import { PIC } from "../../components/PIC/PIC";
 import { addCircleOutline } from 'ionicons/icons'
 import { RegisterNameArrayReducer } from "../../models/Registers/RegisterNameArray.reducer";
 import { RegisterNameItem } from "../../components/Registers/RegisterItem/RegisterItem";
@@ -23,10 +23,10 @@ import { usePICDataIO } from "../../models/PICs/usePICDataIO";
 import { PICName } from "../../models/PICs/PICName";
 
 /**
- * デバイス登録
+ * PIC登録
  * @returns 
  */
-export const RegistryDevice = () => {
+export const RegistryPIC = () => {
     const [pinLength, setPinLength] = useState<number>(8);
     const [presentAlert] = useIonAlert();
 
@@ -118,7 +118,8 @@ export const RegistryDevice = () => {
 
             <IonHeader slot='fixed'>
                 <svg style={{ width: '100vw', height: '45vh', background: 'gray' }} >
-                    <Device
+                    <PIC
+                        picName={picName}
                         registerPinArray={assignRegisterPinArray}
                         dispatchAssignRegisterPinArray={dispatchAssignRegisterPinArray} />
                 </svg>

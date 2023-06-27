@@ -1,6 +1,6 @@
 import { IonAccordion, IonAccordionGroup, IonContent, IonHeader, IonItem, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import './Home.css';
-import { Device } from '../components/Device/Device';
+import { Device } from '../components/PIC/PIC';
 import { useEffect, useRef, useState } from 'react';
 import { BinaryCard } from '../components/Registers/BinaryCard/BinaryCard';
 import { HexCard } from '../components/Registers/HexCard/HexCard';
