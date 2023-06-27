@@ -10,7 +10,6 @@ import { RegisterNameItem } from "../../components/Registers/RegisterItem/Regist
 import { RegisterPinArray } from "../../models/Registers/RegisterPinArray";
 import { AssignRegisterPinArrayReducer } from "../../models/Assigns/AssignRegisterPinArray.resucer";
 import { useRecoilState } from "recoil";
-import { Pin } from "../../models/Devices/Pin";
 import { UnAssignRegisterPin } from "../../models/Registers/UnAssignRegisterPin";
 import { RegisterName } from "../../models/Registers/RegisterName";
 import { SelectRegisterNameAtom } from "../../models/Registers/SelectRegisterName.atom";
@@ -21,6 +20,7 @@ import { UNDetectPICName } from "../../models/PICs/UnDetectPICName";
 import { DetectPICName } from "../../models/PICs/DetectPICName";
 import { usePICDataIO } from "../../models/PICs/usePICDataIO";
 import { PICName } from "../../models/PICs/PICName";
+import { Pin } from "../../models/PICs/Pin";
 
 /**
  * PIC登録

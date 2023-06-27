@@ -51,6 +51,15 @@ export const PIC = (props: PICProp) => {
                 fill='none'
                 stroke='white' />
 
+            <text
+                x={pinFootX(false) * 0.55}
+                y={headerMargin * 1.6}
+                fill="white"
+                writingMode='vertical-rl'>
+                {props.picName.Value}
+            </text>
+
+
             {
                 props.registerPinArray.Value.map((pin, index) => {
                     const isLeft: boolean = index < (pinLength / 2);

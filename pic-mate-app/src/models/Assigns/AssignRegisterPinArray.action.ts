@@ -1,4 +1,4 @@
-import { Pin } from "../Devices/Pin"
+import { Pin } from "../PICs/Pin"
 import { RegisterName } from "../Registers/RegisterName"
 
 /**

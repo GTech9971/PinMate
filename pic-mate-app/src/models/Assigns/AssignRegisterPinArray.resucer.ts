@@ -1,4 +1,4 @@
-import { Pin } from "../Devices/Pin";
+import { Pin } from "../PICs/Pin";
 import { AssignRegisterPin } from "../Registers/AssignRegisterPin";
 import { DetectRegisterNo } from "../Registers/DetectRegisterNo";
 import { RegisterPin } from "../Registers/RegisterPin";
@@ -15,11 +15,11 @@ import { AssignRegisterPinArrayAction } from "./AssignRegisterPinArray.action";
 export const AssignRegisterPinArrayReducer = (state: RegisterPinArray, action: AssignRegisterPinArrayAction): RegisterPinArray => {
     switch (action.type) {
         case 'init': {
-            const rergisterPinFootArray: RegisterPinArray = new RegisterPinArray(
+            const registerPinFootArray: RegisterPinArray = new RegisterPinArray(
                 Array.from({ length: action.pinLength / 2 }, (_, i) => new UnAssignRegisterPin(new Pin(i + 1))).concat(
                     Array.from({ length: action.pinLength / 2 }, (_, i) => new UnAssignRegisterPin(new Pin(i + (action.pinLength / 2) + 1))).reverse()
                 ));
-            return rergisterPinFootArray;
+            return registerPinFootArray;
         } case 'assign': {
             //新しいレジスター番号を作る
             const registerNo: DetectRegisterNo = new DetectRegisterNo(state.nextRegisterNo(action.registerName));

@@ -1,6 +1,6 @@
 import { IonAccordion, IonAccordionGroup, IonContent, IonHeader, IonItem, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import './Home.css';
-import { Device } from '../components/PIC/PIC';
+import { PIC } from '../components/PIC/PIC';
 import { useEffect, useRef, useState } from 'react';
 import { BinaryCard } from '../components/Registers/BinaryCard/BinaryCard';
 import { HexCard } from '../components/Registers/HexCard/HexCard';
@@ -29,7 +29,7 @@ const Home: React.FC = () => {
 
       <IonHeader slot='fixed'>
         <svg ref={rootRef} style={{ width: '100vw', height: '50vh', background: 'gray' }} >
-          <Device x={rootWidth} y={rootHeight} pinLength={18} />
+          {/* <PIC x={rootWidth} y={rootHeight} pinLength={18} /> */}
         </svg>
       </IonHeader>
 
